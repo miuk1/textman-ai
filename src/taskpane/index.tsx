@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import App from "./components/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 
-
 /* global document, Office, module, require */
 const rootElement: HTMLElement = document.getElementById("container");
 const root = createRoot(rootElement);
