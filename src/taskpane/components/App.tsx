@@ -1,44 +1,45 @@
-import * as React from "react";
-import Header from "./Header";
-import HeroList, { HeroListItem } from "./HeroList";
-import TextInsertion from "./TextInsertion";
-import { makeStyles } from "@fluentui/react-components";
-import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
+import React, { useState } from "react";
+import OpenAI from "openai";
+import process from "process";
 
-interface AppProps {
-  title: string;
-}
+const App = () => {
+  // Use state to manage the user's input
+  const [userContent, setUserContent] = useState("");
 
-const useStyles = makeStyles({
-  root: {
-    minHeight: "100vh",
-  },
-});
+  const generateContent = async () => {
+    // Call OpenAI API to generate content
+    const openai = new OpenAI({ organization: process.env.OPENAI_ORG, apiKey: process.env.OPENAI_API_KEY });
 
-const App = (props: AppProps) => {
-  const styles = useStyles();
-  // The list items are static and won't change at runtime,
-  // so this should be an ordinary const, not a part of state.
-  const listItems: HeroListItem[] = [
-    {
-      icon: <Ribbon24Regular />,
-      primaryText: "Achieve more with Office integration",
-    },
-    {
-      icon: <LockOpen24Regular />,
-      primaryText: "Unlock features and functionality",
-    },
-    {
-      icon: <DesignIdeas24Regular />,
-      primaryText: "Create and visualize like a pro",
-    },
-  ];
+    console.log(`Generating content for: ${userContent}`);
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: userContent },
+        ],
+      });
+
+      const generatedContent = completion.choices[0]?.message?.content || 'No content generated.';
+
+      // Insert the generated content into OneNote (you may need to implement this function)
+      insertContentIntoOneNote(generatedContent);
+    } catch (error) {
+      console.error("Error generating content:", error);
+    }
+  };
+
+  const insertContentIntoOneNote = (content) => {
+    console.log(`Inserting content into OneNote: ${content}`);
+    // Implement logic to insert content into OneNote
+  };
 
   return (
-    <div className={styles.root}>
-      <Header logo="assets/logo-filled.png" title={props.title} message="Welcome" />
-      <HeroList message="Discover what this add-in can do for you today!" items={listItems} />
-      <TextInsertion />
+    <div>
+      <h2>TextMan - AI Content Generator</h2>
+      <input type="text" value={userContent} onChange={(e) => setUserContent(e.target.value)} />
+      <button onClick={generateContent}>Generate Content</button>
     </div>
   );
 };

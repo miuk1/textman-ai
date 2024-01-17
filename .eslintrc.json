@@ -4,5 +4,15 @@
   ],
   "extends": [
     "plugin:office-addins/react"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "dist/**/*.js"
+      ],
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      }
+    }
   ]
 }

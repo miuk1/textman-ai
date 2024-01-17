@@ -1,5 +1,6 @@
 # Node.js
 node_modules
+dist
 
 
 # Security
@@ -7,4 +8,4 @@ node_modules
 
 # IDE
 .vscode
-
+.code-workspace
